@@ -1,3 +1,5 @@
+// Rules tests
+
 var Docs = new Mongo.Collection("docs");
 
 if (Meteor.isServer) {
@@ -18,22 +20,29 @@ if (Meteor.isServer) {
       });
       this.ready();
     });
+    
+    Meteor.methods({
+      removeDoc: function() {
+        Docs.remove({name: 'value1'});
+      }
+    });
   }
 } else {
-  Tinytest.addAsync("nested-subscriptions - publish overlapping cursors in child subscriptions",
-    function (test, done) {
+  testAsyncMulti("nested-subscriptions - overlapping subscriptions", [
+    function (test, expect) {
       Meteor.subscribe("overlappingPublish", {
-        onReady: function() {
+        onReady: expect(function() {
           test.equal(Docs.find().count(), 2);
-          done();
-        },
-        onError: function(error) {
-          test.fail(error);
-          done();
-        }
+        })
       });
+    },
+    function (test, expect) {
+      Meteor.call('removeDoc', expect(function(error) {
+        test.isUndefined(error);
+        test.equal(Docs.find().count(), 1);
+      }));
     }
-  );
+  ]);
 }
 
 if (Meteor.isServer) {
