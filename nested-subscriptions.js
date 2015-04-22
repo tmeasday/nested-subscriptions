@@ -5,8 +5,6 @@ NestedPublish = function(name, handler) {
   });
 };
 
-
-// To gain access to the subscription prototype, see below
 var Subscription;
 var setSubscriptionPrototype = function(subscription) {
   if (! Subscription) {
@@ -26,7 +24,7 @@ NestedSubscription = function(subscription, notRoot) {
 _.extend(NestedSubscription.prototype, {
   publish: function(handler, params) {
     if (this.root) {
-      throw "A Nested Subscription can only publish once. Call this.publish inside it's handler to publish again";
+      throw "A Nested Subscription can only publish once. Call this.publish inside its handler to publish again";
     }
     
     this.root = new NestedSubscriptionNode(this, this.session, handler, params);
