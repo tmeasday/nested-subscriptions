@@ -41,7 +41,7 @@ _.extend(NestedSubscription.prototype, {
   }
 });
 
-
+// Does the work. A subclass of Subscription
 var NestedSubscriptionNode = function(_parent, session, handler, params) {
   var self = this;
   
